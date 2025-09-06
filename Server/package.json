@@ -1,0 +1,40 @@
+{
+  "name": "sns-v1",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "register:testnet": "node scripts/register-domain-testnet.js",
+    "lookup": "node scripts/lookup-domain.js",
+    "add:eth": "node scripts/add-eth-record.js",
+    "server": "node server.js",
+    "test:server": "node scripts/test-server.js",
+    "fetch:sns": "node scripts/fetch-sns.js",
+    "test:spaces": "node scripts/test-spaces.js",
+    "create:shop": "node scripts/create-shop.js",
+    "seed:lend": "node scripts/seed-lend-items.js",
+    "seed:reqhang": "node scripts/seed-requests-hangouts.js",
+    "seed:apex": "node scripts/seed-bulk-apex-mumbai.js",
+    "create:wallets": "node scripts/create-wallets-master.js",
+    "create:wallets:realtime": "node scripts/create-wallets-master-realtime.js",
+    "update:smartwallets": "node scripts/update-smartwallets-charlie.js",
+    "check:quirk": "node scripts/check-quirk-charlie.js",
+    "create:payment": "node scripts/create-quirk-pay.js",
+    "add:note-column": "node scripts/add-note-column.js",
+    "fetch:payments": "node scripts/fetch-payments-by-mail.js",
+    "fetch:payment": "node scripts/fetch-payment-by-id.js"
+  },
+  "dependencies": {
+    "@bonfida/spl-name-service": "^3.0.16",
+    "@solana/spl-token": "^0.4.7",
+    "@solana/web3.js": "^1.95.3",
+    "axios": "^1.6.0",
+    "bs58": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.8.1",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.11.3"
+  }
+}

@@ -1,0 +1,384 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Enhanced galaxy theme with AMOLED-dark colors and glassmorphism variables */
+:root {
+  --background: oklch(0.02 0 0); /* Pure AMOLED black */
+  --foreground: oklch(0.98 0 0); /* Pure white for contrast */
+  --card: oklch(0.05 0.02 240); /* Very dark blue-tinted cards */
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.03 0.01 240);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.6 0.2 240); /* Galaxy blue */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.1 0.05 280); /* Dark purple accent */
+  --secondary-foreground: oklch(0.9 0 0);
+  --muted: oklch(0.08 0.02 240);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.15 0.1 260); /* Purple accent */
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.5 0.2 0); /* Red for destructive actions */
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.15 0.05 240); /* Subtle blue borders */
+  --input: oklch(0.08 0.02 240);
+  --ring: oklch(0.4 0.15 240);
+  --chart-1: oklch(0.6 0.2 240);
+  --chart-2: oklch(0.65 0.15 280);
+  --chart-3: oklch(0.7 0.18 320);
+  --chart-4: oklch(0.55 0.22 200);
+  --chart-5: oklch(0.75 0.16 160);
+  --radius: 0.75rem; /* Slightly more rounded for modern look */
+
+  /* Galaxy-specific variables */
+  --galaxy-primary: oklch(0.6 0.2 240);
+  --galaxy-secondary: oklch(0.55 0.18 280);
+  --galaxy-accent: oklch(0.7 0.15 320);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+.dark {
+  --background: oklch(0.02 0 0);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.05 0.02 240);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.03 0.01 240);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.6 0.2 240);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.1 0.05 280);
+  --secondary-foreground: oklch(0.9 0 0);
+  --muted: oklch(0.08 0.02 240);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.15 0.1 260);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.5 0.2 0);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.15 0.05 240);
+  --input: oklch(0.08 0.02 240);
+  --ring: oklch(0.4 0.15 240);
+  --chart-1: oklch(0.6 0.2 240);
+  --chart-2: oklch(0.65 0.15 280);
+  --chart-3: oklch(0.7 0.18 320);
+  --chart-4: oklch(0.55 0.22 200);
+  --chart-5: oklch(0.75 0.16 160);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Force dark theme and AMOLED background */
+    background: #000000;
+    color: #ffffff;
+  }
+
+  /* Enhanced scrollbar styling for galaxy theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Galaxy background animations and effects */
+@layer components {
+  .galaxy-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at top, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at center, rgba(119, 198, 255, 0.1) 0%, transparent 50%), #000000;
+    z-index: -1;
+  }
+
+  .galaxy-stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.8), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.9), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.7), transparent),
+      radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.5), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+    z-index: -1;
+  }
+
+  .galaxy-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(119, 198, 255, 0.06) 0%, transparent 50%);
+    animation: float 8s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 0 20px
+      rgba(120, 119, 198, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card-hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 30px
+      rgba(120, 119, 198, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .glass-sidebar {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(24px);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+    border: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+  }
+
+  /* Override any inherited borders for sidebar */
+  div.glass-sidebar,
+  nav.glass-sidebar,
+  .glass-sidebar > * {
+    border: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+  }
+
+  .glass-modal {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .glass-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), 0 0 20px rgba(120, 119, 198, 0.2);
+  }
+
+  .glass-input {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .glass-input:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(120, 119, 198, 0.6);
+    box-shadow: 0 0 0 2px rgba(120, 119, 198, 0.2), 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Added new animation classes */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite alternate;
+  }
+}
+
+/* Enhanced animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 20px rgba(120, 119, 198, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(120, 119, 198, 0.6);
+  }
+}
+
+/* Responsive galaxy effects */
+@media (max-width: 640px) {
+  .galaxy-stars {
+    background-size: 150px 75px;
+  }
+
+  .glass-card {
+    backdrop-filter: blur(15px);
+  }
+
+  .glass-sidebar {
+    backdrop-filter: blur(15px);
+  }
+
+  /* Mobile-specific spacing adjustments */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Ensure mobile cards are properly sized */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Enhanced mobile navigation spacing */
+  .fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Ensure content doesn't get hidden behind mobile navigation */
+  .pb-24 {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .galaxy-stars {
+    background-size: 150px 75px;
+  }
+
+  .glass-card {
+    backdrop-filter: blur(15px);
+  }
+
+  .glass-sidebar {
+    backdrop-filter: blur(15px);
+  }
+
+  /* Mobile-specific spacing adjustments */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Ensure mobile cards are properly sized */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Accessibility improvements for galaxy theme */
+@media (prefers-reduced-motion: reduce) {
+  .galaxy-stars,
+  .galaxy-particles {
+    animation: none;
+  }
+
+  .glass-button:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass-card {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-button {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+
+
+
