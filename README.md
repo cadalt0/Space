@@ -1,12 +1,12 @@
-# 🌌 SPACE - Decentralized Social Network Platform
+# 🌌 SPACE - Crypto Social Space Platform
 
 <div align="center">
   <img src="website-ui-backend/public/logo.png" alt="SPACE Logo" width="200" height="200" />
   
-  <h3>Make new crypto frens anywhere</h3>
+  <h3>Where crypto meets community - IRL</h3>
   
   <p align="center">
-    <strong>A Web3-powered social platform built on Solana with Web3Auth integration and SNS (Solana Name Service) support</strong>
+    <strong>Blockchain-secured social spaces for crypto communities at real-world events</strong>
   </p>
   
   [![Solana](https://img.shields.io/badge/Solana-9945FF?style=for-the-badge&logo=solana&logoColor=white)](https://solana.com/)
@@ -20,23 +20,51 @@
 
 ## 🚀 About SPACE
 
-**SPACE** is a revolutionary decentralized social networking platform that brings together crypto enthusiasts, developers, and blockchain communities in immersive 3D virtual spaces. Built specifically for the Web3Auth and SNS (Solana Name Service) tracks, SPACE enables users to:
+**SPACE** is a blockchain-secured social platform that creates trustless spaces for crypto communities at real-world events. Built on Solana with Web3Auth integration, this platform enables secure interactions where community members stake SOL as collateral to participate in event-specific spaces.
 
-- **Explore** local onchain crypto shops and communities
-- **Lend or sell** anything onchain with smart contract security
-- **Plan hangouts** with onchain security and verification
-- **Stake and vote** on community decisions using Solana smart contracts
-- **Connect** with like-minded crypto enthusiasts through Web3Auth authentication
+### 🎯 The Problem We Solve
 
-### 🎯 Core Features
+**Trust Issues at Events:**
+- Scammers and fake profiles at crypto meetups
+- Unreliable vendors and shops at conferences  
+- People not paying their share of group expenses
+- Items borrowed but never returned
+- No accountability for bad behavior
 
-- **🔐 Web3Auth Integration**: Seamless wallet connection and user authentication
-- **🏷️ SNS (Solana Name Service) Support**: Human-readable names for Solana addresses
-- **💰 Onchain Staking**: Stake SOL with cooldown periods and admin slashing capabilities
-- **🗳️ Decentralized Voting**: Community-driven decision making with onchain voting
-- **🛍️ Crypto Shops**: Create and manage onchain marketplaces
-- **🎮 3D Virtual Spaces**: Immersive 3D environments for social interaction
-- **📱 Modern UI/UX**: Built with Next.js, TypeScript, and Tailwind CSS
+**Fragmented Social Experience:**
+- Disconnected social interactions at crypto events
+- No unified platform for event-specific commerce
+- Limited ways to monetize community participation
+- Lack of reputation systems for real-world interactions
+
+### 💡 Our Solution
+
+**Core Innovation: Blockchain-Secured Social Spaces**
+
+We've created a social platform where every interaction is secured by blockchain technology, creating a trustless environment where community members have real skin in the game through SOL staking.
+
+**Key Features:**
+- **🛍️ Onchain Commerce**: Crypto-enabled shops with community rating
+- **📦 IRL Item Lending**: Lend physical items with custom security deposits
+- **💰 Community Requests**: Paid requests for services and help
+- **🤝 Safe Hangouts**: Organize meetups with crypto security
+- **🗳️ Decentralized Voting**: On-chain voting for all content and disputes
+
+### 🔐 Authentication & Security
+
+- **Web3Auth Wallet Connection**: Seamless wallet connection using Web3Auth modal
+- **SNS Profile Creation**: Every user must create an on-chain SNS (Solana Name Service) profile
+- **Enhanced Auth Guard**: Multi-layered authentication requiring both profile and stake
+- **Minimum Stake Requirement**: 0.001 SOL minimum to participate in spaces
+- **Multi-Layer Security**: Web3Auth + SNS + Staking requirements for all actions
+
+### 🎮 Event-Specific Social Spaces
+
+- **Search & Discovery**: Find spaces by event name or city using the homepage search
+- **Space Creation**: Community members can create spaces for specific events
+- **Feature Toggle**: Each space can enable/disable specific features (shops, lend, request, hangout)
+- **Admin Controls**: Space creators can set rules and moderation
+- **3D Space Scene**: Interactive 3D visualization using Three.js
 
 ---
 
@@ -89,131 +117,105 @@ Smart Contracts → Onchain Data → Frontend → User Interface
 
 ---
 
-## 🏗️ Architecture Overview
+## 🏗️ Technical Architecture
 
 ### Smart Contracts (Deployed on Solana Devnet)
 
-#### 1. **Staking Contract** 
+#### 1. **Staking Program** 
 - **Program ID**: `HiTfqcaU6XwKVYcudqCLAZKzCFjCyXQxZ1LQkn2PcEks`
 - **Deployed Contract**: [View on Solana Devnet Explorer](https://explorer.solana.com/address/HiTfqcaU6XwKVYcudqCLAZKzCFjCyXQxZ1LQkn2PcEks?cluster=devnet)
 - **Features**:
-  - Initialize vaults for users
-  - Deposit SOL with minimum amount validation
-  - Withdraw with cooldown period (prevents immediate withdrawals)
-  - Admin slashing capabilities
-  - Program-derived addresses for secure vault management
+  - Vault System: Program Derived Addresses for user vaults
+  - Instructions: `init_vault` and `deposit` instructions
+  - Minimum Stake: 0.001 SOL (0.0001 SOL minimum validation)
+  - Security: User funds locked in Program Derived Addresses
 
-#### 2. **Voting Contract**
+#### 2. **Voting Program**
 - **Program ID**: `5zQieQbJebHJdxpURBSswrVbHWtKXZHx6EF1gEzNrXZp`
 - **Deployed Contract**: [View on Solana Devnet Explorer](https://explorer.solana.com/address/5zQieQbJebHJdxpURBSswrVbHWtKXZHx6EF1gEzNrXZp?cluster=devnet)
 - **Features**:
-  - Initialize items for voting
-  - Upvote/downvote functionality
-  - Vote tracking to prevent double voting
-  - Community-driven decision making
+  - Instructions: `upvote` and `downvote` with discriminators
+  - PDA Seeds: `[b"item", item_id]` and `[b"vote_tracker", item_id, voter]`
+  - Vote Tracking: Prevents double voting through vote tracker PDAs
+  - Community Justice: Voting system to penalize rule breakers
 
-### Backend Services
+### Frontend Stack
+- **Framework**: Next.js 15.2.4 with React 19
+- **UI Components**: Radix UI with Tailwind CSS
+- **3D Graphics**: Three.js with React Three Fiber
+- **State Management**: React hooks and local state
+- **Forms**: React Hook Form with Zod validation
 
-#### **SNS (Solana Name Service) Server** (`Server/`)
-- **Technology**: Node.js + Express + PostgreSQL
-- **Features**:
-  - SNS user management and registration
-  - Space and shop data management
-  - Payment processing integration
-  - Database operations for user profiles
+### Blockchain Integration
+- **Network**: Solana Devnet (`https://api.devnet.solana.com`)
+- **Wallet**: Web3Auth Modal for Solana
+- **SNS Integration**: `@bonfida/spl-name-service` for on-chain identity
+- **Transaction Handling**: Web3Auth's `useSignAndSendTransaction` hook
 
-### Frontend Application
-
-#### **Website UI Backend** (`website-ui-backend/`)
-- **Technology**: Next.js 15 + TypeScript + Tailwind CSS
-- **Features**:
-  - Web3Auth modal integration
-  - SNS profile management
-  - 3D space visualization with Three.js
-  - Real-time transaction signing
-  - Responsive design with modern UI components
+### Data Management
+- **Database**: In-memory mock database (JSON-based)
+- **Data Types**: Spaces, Shops, LendItems, Requests, Hangouts
+- **Voting**: Local vote count updates with blockchain verification
+- **Persistence**: Currently mock data, ready for database integration
 
 ---
 
-## 🔗 System Integration
+## 🎮 User Journey
 
-### Web3Auth Integration
-- **Purpose**: Provides seamless wallet connection and user authentication
-- **Implementation**: Modal-based authentication with multiple wallet support
-- **Location**: `components/web3auth-provider.tsx`, `lib/web3authContext.ts`
+### New User Onboarding
+1. **Wallet Connection**: Connect via Web3Auth modal
+2. **SNS Profile Creation**: Create on-chain SNS identity
+3. **Initial Staking**: Stake minimum 0.001 SOL
+4. **Space Discovery**: Search for events or cities
+5. **Feature Exploration**: Explore shops, lending, requests, hangouts
 
-### SNS (Solana Name Service) Integration
-- **Purpose**: Enables human-readable names for Solana addresses
-- **Implementation**: API integration with SNS database server
-- **Location**: `lib/sns-config.ts`, `components/sns-profile-modal.tsx`
+### Active User Experience
+1. **Space Participation**: Join event-specific spaces
+2. **Commerce**: Buy/sell items, rate shops
+3. **Lending**: Borrow/lend physical items
+4. **Community**: Create requests, plan hangouts
+5. **Governance**: Vote on content, report issues
 
-### Smart Contract Integration
-- **Staking**: Direct interaction with Solana staking program
-- **Voting**: Community voting system with onchain verification
-- **Location**: `lib/staking.ts`, `lib/voting.ts`
-
----
-
-## 📊 Project Structure
-
-```
-SPACE/
-├── Contract/                    # Solana Smart Contracts
-│   └── Stake + vote/
-│       ├── src Stake/          # Staking contract (Rust/Anchor)
-│       └── src Vote/           # Voting contract (Rust/Anchor)
-├── Server/                     # Backend API Server
-│   ├── server.js              # Express server with SNS endpoints
-│   └── package.json           # Node.js dependencies
-└── website-ui-backend/        # Frontend Application
-    ├── app/                   # Next.js app router
-    ├── components/            # React components
-    ├── lib/                   # Utility libraries
-    └── public/                # Static assets
-```
+### Authentication Flow
+1. **Web3Auth Check**: Verify wallet connection
+2. **SNS Profile Check**: Verify on-chain identity exists
+3. **Stake Verification**: Check minimum stake requirements
+4. **Action Authorization**: Allow/deny based on requirements
 
 ---
 
-## 🎨 Key Components
+## 💰 Economic Model
 
-### Frontend Components
-- **SpaceScene**: 3D virtual environment with floating crypto elements
-- **Web3AuthProvider**: Authentication wrapper for wallet connections
-- **SNSProfileModal**: SNS name management interface
-- **StakeModal**: Staking interface with transaction signing
-- **TransactionSigner**: Solana transaction handling
+### Staking Economics
+- **Minimum Stake**: 0.001 SOL to participate
+- **Validation**: 0.0001 SOL minimum for transactions
+- **Vault System**: User funds locked in Program Derived Addresses
+- **Security**: Stakes act as collateral for platform participation
 
-### Backend Services
-- **SNS API**: User registration and profile management
-- **Spaces API**: Virtual space data management
-- **Shops API**: Onchain marketplace management
+### Fee Structure
+- **Transaction Fees**: Solana network fees only
+- **No Platform Fees**: Currently no additional fees
+- **Gas Optimization**: Efficient transaction batching
 
 ---
 
-## 🌟 Technology Stack
+## 🔒 Security Features
 
-### Frontend
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS + Radix UI
-- **3D Graphics**: Three.js + React Three Fiber
-- **Web3**: Solana Web3.js + Web3Auth
-- **State Management**: React Query + Context API
+### Smart Contract Security
+- **Program Derived Addresses**: Secure account management
+- **Discriminator Validation**: Instruction validation through discriminators
+- **Vote Tracking**: Prevents double voting through PDA system
+- **Vault System**: Secure staking with user-controlled vaults
 
-### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: PostgreSQL
-- **Blockchain**: Solana (Devnet)
-
-### Smart Contracts
-- **Language**: Rust
-- **Framework**: Anchor
-- **Network**: Solana Devnet
+### User Protection
+- **Multi-Layer Auth**: Web3Auth + SNS + Staking requirements
+- **Enhanced Auth Guard**: Comprehensive permission system
+- **Stake Requirements**: Financial skin in the game
+- **Community Voting**: Decentralized content moderation
 
 ---
 
 <div align="center">
-  <p><strong>Built with  Web3Auth and SNS ❤️
-  <p>Making crypto social, one space at a time 🌌</p>
+  <p><strong>Built with  Web3Auth and SNS ❤️ </strong></p>
+  <p>Where crypto meets community - making Web3 social, one space at a time 🌌</p>
 </div>
