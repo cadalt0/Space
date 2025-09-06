@@ -20,7 +20,7 @@
 
 ## 🚀 About SPACE
 
-**SPACE** is a blockchain-secured social platform that creates trustless spaces for crypto communities at real-world events. Built on Solana with Web3Auth integration, this platform enables secure interactions where community members stake SOL as collateral to participate in event-specific spaces.
+**SPACE** is a blockchain-secured social platform that creates trustless spaces for crypto communities at real-world events. Built on Solana with Web3Auth and SNS (Solana Name Service) integration, this platform enables secure interactions where community members stake SOL as collateral to participate in event-specific spaces.
 
 ### 🎯 The Problem We Solve
 
@@ -191,6 +191,24 @@ Smart Contracts → Onchain Data → Frontend → User Interface
 - **Validation**: 0.0001 SOL minimum for transactions
 - **Vault System**: User funds locked in Program Derived Addresses
 - **Security**: Stakes act as collateral for platform participation
+- **Fund Locking**: User funds remain locked until they leave the space
+
+### Reward & Slashing System
+
+The platform implements a sophisticated slashing mechanism that ensures community accountability and rewards good behavior. When a user violates rules or provides incorrect data, their staked SOL is slashed and distributed proportionally to other community members based on their stake size.
+
+**Example Scenario:**
+- Alice stakes 0.5 SOL but adds fake shop data to the space
+- Bob stakes 2.0 SOL and follows all rules
+- Charlie stakes 1.0 SOL and is an active community member
+- Total community stake: 3.5 SOL
+
+When Alice's 0.5 SOL gets slashed for rule violation:
+- Bob receives: (2.0 ÷ 3.5) × 0.5 = 0.286 SOL (57.1% of slashed funds)
+- Charlie receives: (1.0 ÷ 3.5) × 0.5 = 0.143 SOL (28.6% of slashed funds)
+- Remaining 0.071 SOL goes to other smaller stakers
+
+This creates strong economic incentives for users to maintain high-quality contributions and follow community rules, as bad actors lose their stake while good actors are rewarded proportionally to their commitment level.
 
 ### Fee Structure
 - **Transaction Fees**: Solana network fees only
@@ -206,6 +224,8 @@ Smart Contracts → Onchain Data → Frontend → User Interface
 - **Discriminator Validation**: Instruction validation through discriminators
 - **Vote Tracking**: Prevents double voting through PDA system
 - **Vault System**: Secure staking with user-controlled vaults
+- **Slashing Protection**: Admin can slash funds for rule violations
+- **Community Justice**: Slashed funds distributed proportionally to stakers
 
 ### User Protection
 - **Multi-Layer Auth**: Web3Auth + SNS + Staking requirements
@@ -216,6 +236,6 @@ Smart Contracts → Onchain Data → Frontend → User Interface
 ---
 
 <div align="center">
-  <p><strong>Built with  Web3Auth and SNS ❤️ </strong></p>
+  <p><strong>Built with ❤️ for the Web3Auth and SNS communities</strong></p>
   <p>Where crypto meets community - making Web3 social, one space at a time 🌌</p>
 </div>
