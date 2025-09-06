@@ -236,6 +236,6 @@ This creates strong economic incentives for users to maintain high-quality contr
 ---
 
 <div align="center">
-  <p><strong>Built with ❤️ for the Web3Auth and SNS communities</strong></p>
+  <p><strong>Built with  Web3Auth and SNS ❤️ </strong></p>
   <p>Where crypto meets community - making Web3 social, one space at a time 🌌</p>
 </div>
