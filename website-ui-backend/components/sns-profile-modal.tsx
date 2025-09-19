@@ -47,6 +47,8 @@ export function SNSProfileModal({ isOpen, onClose }: SNSProfileModalProps) {
   const [balance, setBalance] = useState<number | null>(null)
   const [isLoadingBalance, setIsLoadingBalance] = useState(false)
   const [hasSavedToDB, setHasSavedToDB] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [countdown, setCountdown] = useState<number | null>(null)
 
   // Generate username suggestion from email
   useEffect(() => {
@@ -63,6 +65,24 @@ export function SNSProfileModal({ isOpen, onClose }: SNSProfileModalProps) {
       }
     }
   }, [userInfo])
+
+  // Auto-close countdown when success is true
+  useEffect(() => {
+    if (isSuccess && countdown !== null) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev === null || prev <= 1) {
+            clearInterval(timer)
+            onClose() // Close the modal
+            return null
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(timer)
+    }
+  }, [isSuccess, countdown, onClose])
 
   // Fetch balance when accounts change
   useEffect(() => {
@@ -230,6 +250,8 @@ export function SNSProfileModal({ isOpen, onClose }: SNSProfileModalProps) {
     setError("")
     setDomain(suggestedUsername) // Reset to suggested username
     setHasSavedToDB(false) // Reset save flag
+    setIsSuccess(false) // Reset success state
+    setCountdown(null) // Reset countdown
     onClose()
   }
 
@@ -247,21 +269,23 @@ export function SNSProfileModal({ isOpen, onClose }: SNSProfileModalProps) {
       setHasSavedToDB(true)
       
       // Save SNS ID to database
-      saveSNSID(userInfo.email, fullDomain)
-        .then((result) => {
-          if (result.success) {
+      const saveToDatabase = async () => {
+        try {
+          if (userInfo?.email) {
+            await saveSNSID(userInfo.email, fullDomain)
             console.log('SNS ID saved to database successfully')
-          } else {
-            console.error('Failed to save SNS ID to database:', result.error)
-            // Reset flag if save failed
-            setHasSavedToDB(false)
+            // Set success state and start countdown
+            setIsSuccess(true)
+            setCountdown(5)
           }
-        })
-        .catch((error) => {
-          console.error('Error in saveSNSID promise:', error)
+        } catch (error) {
+          console.error('Error saving SNS ID to database:', error)
           // Reset flag if save failed
           setHasSavedToDB(false)
-        })
+        }
+      }
+      
+      saveToDatabase()
       
       // Reopen our modal after transaction is confirmed
       setTimeout(() => {
@@ -294,100 +318,159 @@ export function SNSProfileModal({ isOpen, onClose }: SNSProfileModalProps) {
       <DialogContent className="bg-black/90 backdrop-blur-md border-white/20 max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
-            <User className="h-5 w-5 text-purple-400" />
-            Create SNS Profile
+            {isSuccess ? (
+              <>
+                <CheckCircle className="h-5 w-5 text-green-400" />
+                Profile Created
+              </>
+            ) : (
+              <>
+                <User className="h-5 w-5 text-purple-400" />
+                Create SNS Profile
+              </>
+            )}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Balance Display */}
-          {balance !== null && (
-            <div className="text-center p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <p className="text-green-400 font-medium">
-                Balance: {(balance / LAMPORTS_PER_SOL).toFixed(4)} SOL
-              </p>
-            </div>
-          )}
-          {isLoadingBalance && (
-            <div className="text-center p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <p className="text-blue-400">Loading balance...</p>
-            </div>
-          )}
-          {balance === null && !isLoadingBalance && (
-            <div className="text-center p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-              <p className="text-yellow-400 text-sm">
-                ⚠️ Unable to fetch balance. RPC endpoint may be overloaded.
-              </p>
-              <p className="text-yellow-400 text-xs mt-1">
-                You can still create a profile if you have sufficient SOL.
-              </p>
-            </div>
-          )}
-
-          {/* Profile Creation Form */}
-          <Card className="bg-black/30 backdrop-blur-md border-white/20">
-            <CardHeader>
-              <CardTitle className="text-white">Profile Details</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-300 mb-4">
-                Create your unique .sol domain profile
-              </p>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-300 mb-2 block">Domain Name</label>
-                  <div className="flex items-center gap-2">
-                    <Input
-                      value={domain}
-                      onChange={(e) => setDomain(e.target.value)}
-                      className="bg-white/10 border-white/20 text-white"
-                      placeholder={suggestedUsername || "yourname"}
-                    />
-                    <span className="text-purple-400 font-medium">.sol</span>
-                  </div>
-                  {suggestedUsername && (
-                    <p className="text-xs text-purple-400 mt-1">
-                      💡 Suggested from your email: {suggestedUsername}.sol
-                    </p>
-                  )}
-                  <p className="text-xs text-gray-400 mt-1">3-32 characters, letters and numbers only</p>
+          {/* Show form only if not in success state */}
+          {!isSuccess && (
+            <>
+              {/* Balance Display */}
+              {balance !== null && (
+                <div className="text-center p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                  <p className="text-green-400 font-medium">
+                    Balance: {(balance / LAMPORTS_PER_SOL).toFixed(4)} SOL
+                  </p>
                 </div>
+              )}
+              {isLoadingBalance && (
+                <div className="text-center p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                  <p className="text-blue-400">Loading balance...</p>
+                </div>
+              )}
+              {balance === null && !isLoadingBalance && (
+                <div className="text-center p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                  <p className="text-yellow-400 text-sm">
+                    ⚠️ Unable to fetch balance. RPC endpoint may be overloaded.
+                  </p>
+                  <p className="text-yellow-400 text-xs mt-1">
+                    You can still create a profile if you have sufficient SOL.
+                  </p>
+                </div>
+              )}
 
-                <Button 
-                  onClick={handleCreateProfile}
-                  disabled={isPending || isProcessing}
-                  className="bg-purple-600 hover:bg-purple-700 text-white w-full"
-                >
-                  {isPending || isProcessing ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      {isPending ? 'Confirming...' : 'Processing...'}
-                    </>
-                  ) : (
-                    <>
-                      <Globe className="h-4 w-4 mr-2" />
-                      Create Profile
-                    </>
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              {/* Profile Creation Form */}
+              <Card className="bg-black/30 backdrop-blur-md border-white/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Profile Details</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-300 mb-4">
+                    Create your unique .sol domain profile
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-300 mb-2 block">Domain Name</label>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          value={domain}
+                          onChange={(e) => setDomain(e.target.value)}
+                          className="bg-white/10 border-white/20 text-white"
+                          placeholder={suggestedUsername || "yourname"}
+                        />
+                        <span className="text-purple-400 font-medium">.sol</span>
+                      </div>
+                      {suggestedUsername && (
+                        <p className="text-xs text-purple-400 mt-1">
+                          💡 Suggested from your email: {suggestedUsername}.sol
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-400 mt-1">3-32 characters, letters and numbers only</p>
+                    </div>
+
+                    <Button 
+                      onClick={handleCreateProfile}
+                      disabled={isPending || isProcessing}
+                      className="bg-purple-600 hover:bg-purple-700 text-white w-full"
+                    >
+                      {isPending || isProcessing ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          {isPending ? 'Confirming...' : 'Processing...'}
+                        </>
+                      ) : (
+                        <>
+                          <Globe className="h-4 w-4 mr-2" />
+                          Create Profile
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
           {/* Transaction Status */}
           {hash && (
-            <Card className="bg-blue-500/10 backdrop-blur-md border-blue-500/20">
+            <Card className={`backdrop-blur-md ${
+              isSuccess 
+                ? "bg-green-500/10 border-green-500/20" 
+                : "bg-blue-500/10 border-blue-500/20"
+            }`}>
               <CardHeader>
-                <CardTitle className="text-blue-400 flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Processing Transaction...
+                <CardTitle className={`flex items-center gap-2 ${
+                  isSuccess 
+                    ? "text-green-400" 
+                    : "text-blue-400"
+                }`}>
+                  {isSuccess ? (
+                    <CheckCircle className="h-5 w-5" />
+                  ) : (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  )}
+                  {isSuccess 
+                    ? "Profile Created Successfully!" 
+                    : "Processing Transaction..."
+                  }
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-blue-300 text-xs">
-                  Transaction submitted! Please wait for confirmation...
+                <p className={`text-sm ${
+                  isSuccess 
+                    ? "text-green-300" 
+                    : "text-blue-300"
+                }`}>
+                  {isSuccess 
+                    ? `Your SNS profile "${domain.replace(/\.sol$/, "")}.sol" has been created successfully!` 
+                    : "Transaction submitted! Please wait for confirmation..."
+                  }
                 </p>
+                {hash && (
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-gray-400 font-mono break-all">
+                      Transaction Hash: {hash}
+                    </p>
+                    {isSuccess && (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          onClick={() => window.open(`https://explorer.solana.com/tx/${hash}?cluster=devnet`, '_blank')}
+                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 h-8"
+                        >
+                          <Globe className="h-3 w-3 mr-1" />
+                          View on Solana Explorer
+                        </Button>
+                        {countdown !== null && (
+                          <div className="text-green-400 text-sm font-medium">
+                            Auto-closing in {countdown}s...
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
